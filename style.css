@@ -1,0 +1,561 @@
+/* ════════════════════════════════════════════════════════════════
+   DESIGN TOKENS & GLOBAL STYLES
+   ════════════════════════════════════════════════════════════════ */
+:root {
+  --rose-deep: #8b1a4a;
+  --rose-mid: #c94277;
+  --rose-light: #f472b6;
+  --rose-glow: #ff6b9d;
+  --blush: #fce4ec;
+  --gold: #ffd700;
+  --gold-soft: #ffe082;
+  --midnight: #0a0014;
+  --deep-purple: #1a0030;
+  --velvet: #2d0845;
+  --soft-white: #fff5f7;
+  --glass-bg: rgba(255, 255, 255, 0.06);
+  --glass-border: rgba(255, 255, 255, 0.12);
+  --font-script: 'Dancing Script', cursive;
+  --font-display: 'Playfair Display', serif;
+  --font-body: 'Outfit', sans-serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--midnight);
+  font-family: var(--font-body);
+  color: var(--soft-white);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ════════════════════════════════════════════════════════════════
+   SCENES
+   ════════════════════════════════════════════════════════════════ */
+.scene {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1;
+}
+
+.scene.active {
+  opacity: 1;
+  pointer-events: all;
+  z-index: 10;
+}
+
+/* ════════════════════════════════════════════════════════════════
+   SCENE 1: ENVELOPE
+   ════════════════════════════════════════════════════════════════ */
+.stars-bg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+#scene-envelope {
+  background: radial-gradient(ellipse at 50% 30%, var(--velvet) 0%, var(--deep-purple) 40%, var(--midnight) 100%);
+}
+
+.envelope-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.envelope {
+  position: relative;
+  width: 280px;
+  height: 200px;
+  perspective: 1000px;
+  transition: transform 0.4s ease;
+}
+
+.envelope:hover {
+  transform: scale(1.05) translateY(-5px);
+}
+
+.envelope-body {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 150px;
+  background: linear-gradient(135deg, #f8e8ee 0%, #fce4ec 50%, #f3d4e0 100%);
+  border-radius: 0 0 16px 16px;
+  box-shadow: 0 20px 60px rgba(139, 26, 74, 0.4), 0 0 100px rgba(255, 107, 157, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+.envelope-heart {
+  font-size: 3rem;
+  animation: heartPulse 1.5s ease-in-out infinite;
+  filter: drop-shadow(0 0 12px rgba(255, 107, 157, 0.6));
+}
+
+.envelope-flap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 120px;
+  background: linear-gradient(180deg, #e8d0d8 0%, #f3d4e0 100%);
+  clip-path: polygon(0 60%, 50% 0, 100% 60%, 100% 100%, 0 100%);
+  z-index: 2;
+  transform-origin: top center;
+  transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+}
+
+.envelope.opened .envelope-flap {
+  transform: rotateX(180deg);
+  z-index: 0;
+}
+
+.tap-hint {
+  font-family: var(--font-script);
+  font-size: 1.3rem;
+  color: var(--rose-light);
+  animation: fadeInUp 1.5s ease 0.5s both, gentleFloat 3s ease-in-out infinite 2s;
+  letter-spacing: 1px;
+}
+
+/* ════════════════════════════════════════════════════════════════
+   SCENE 2: HEART PARTICLES + MESSAGE
+   ════════════════════════════════════════════════════════════════ */
+#scene-heart {
+  background: var(--midnight);
+}
+
+#heartCanvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.message-overlay {
+  position: relative;
+  z-index: 5;
+  text-align: center;
+  max-width: 700px;
+  padding: 3rem;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.message-overlay.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.love-title {
+  font-family: var(--font-script);
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  background: linear-gradient(135deg, var(--rose-glow), var(--gold), var(--rose-light));
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 4s ease-in-out infinite;
+  margin-bottom: 2rem;
+  line-height: 1.3;
+  text-shadow: none;
+  filter: drop-shadow(0 0 30px rgba(255, 107, 157, 0.3));
+}
+
+.love-poem {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(1rem, 2.5vw, 1.35rem);
+  line-height: 2;
+  color: rgba(255, 245, 247, 0.85);
+  margin-bottom: 2.5rem;
+  text-shadow: 0 0 40px rgba(255, 107, 157, 0.2);
+}
+
+.love-poem .line {
+  display: block;
+  opacity: 0;
+  transform: translateY(15px);
+  animation: revealLine 0.8s ease forwards;
+}
+
+/* ════════════════════════════════════════════════════════════════
+   SCENE 3: REASONS
+   ════════════════════════════════════════════════════════════════ */
+#scene-reasons {
+  background: var(--midnight);
+}
+
+#galaxyCanvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.reasons-overlay {
+  position: relative;
+  z-index: 5;
+  text-align: center;
+  max-width: 650px;
+  padding: 2rem;
+  opacity: 0;
+  transform: scale(0.9);
+  transition: all 1s ease;
+}
+
+.reasons-overlay.visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.reasons-title {
+  font-family: var(--font-script);
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  background: linear-gradient(135deg, var(--gold), var(--rose-light), var(--gold-soft));
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 3s ease-in-out infinite;
+  margin-bottom: 2.5rem;
+  filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.3));
+}
+
+.reasons-carousel {
+  position: relative;
+  min-height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.reason-card {
+  position: absolute;
+  width: 100%;
+  max-width: 500px;
+  padding: 2.5rem 2rem;
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  border-radius: 24px;
+  opacity: 0;
+  transform: scale(0.8) translateY(20px);
+  transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 8px 32px rgba(139, 26, 74, 0.2), inset 0 0 60px rgba(255, 107, 157, 0.03);
+}
+
+.reason-card.active {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+}
+
+.reason-emoji {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  display: block;
+  animation: gentleFloat 3s ease-in-out infinite;
+}
+
+.reason-text {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(1.05rem, 2.2vw, 1.3rem);
+  color: rgba(255, 245, 247, 0.9);
+  line-height: 1.7;
+}
+
+.carousel-dots {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 2.5rem;
+}
+
+.carousel-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  padding: 0;
+}
+
+.carousel-dot.active {
+  background: var(--rose-glow);
+  box-shadow: 0 0 12px var(--rose-glow);
+  transform: scale(1.3);
+}
+
+/* ════════════════════════════════════════════════════════════════
+   SCENE 4: FINALE
+   ════════════════════════════════════════════════════════════════ */
+#scene-finale {
+  background: var(--midnight);
+}
+
+#fireworksCanvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.finale-overlay {
+  position: relative;
+  z-index: 5;
+  text-align: center;
+  padding: 2rem;
+  opacity: 0;
+  transition: opacity 2s ease;
+}
+
+.finale-overlay.visible {
+  opacity: 1;
+}
+
+.finale-heart-container {
+  margin-bottom: 1.5rem;
+}
+
+.beating-heart {
+  font-size: 5rem;
+  display: inline-block;
+  animation: heartBeat 1.2s ease-in-out infinite;
+  filter: drop-shadow(0 0 40px rgba(255, 107, 157, 0.6));
+}
+
+.finale-text {
+  font-family: var(--font-script);
+  font-size: clamp(2.5rem, 7vw, 5rem);
+  background: linear-gradient(135deg, var(--rose-glow), var(--gold), var(--rose-light), var(--gold-soft));
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 3s ease-in-out infinite;
+  margin-bottom: 1rem;
+  filter: drop-shadow(0 0 40px rgba(255, 107, 157, 0.4));
+}
+
+.finale-sub {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(1rem, 2.5vw, 1.4rem);
+  color: rgba(255, 245, 247, 0.8);
+  margin-bottom: 2rem;
+  animation: fadeInUp 1.5s ease 1s both;
+}
+
+.infinity-symbol {
+  font-size: 4rem;
+  background: linear-gradient(135deg, var(--gold), var(--rose-light));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gentleSpin 8s linear infinite, fadeInUp 2s ease 1.5s both;
+  filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.3));
+}
+
+/* ════════════════════════════════════════════════════════════════
+   SHARED COMPONENTS
+   ════════════════════════════════════════════════════════════════ */
+.glow-btn {
+  font-family: var(--font-script);
+  font-size: 1.3rem;
+  padding: 1rem 2.5rem;
+  border: none;
+  border-radius: 50px;
+  background: linear-gradient(135deg, var(--rose-deep), var(--rose-mid));
+  color: var(--soft-white);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s ease;
+  box-shadow: 0 4px 20px rgba(201, 66, 119, 0.4), 0 0 40px rgba(255, 107, 157, 0.15);
+  letter-spacing: 0.5px;
+  z-index: 10;
+}
+
+.glow-btn::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 50px;
+  background: linear-gradient(135deg, var(--rose-glow), var(--gold), var(--rose-light));
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.glow-btn:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 8px 30px rgba(201, 66, 119, 0.6), 0 0 60px rgba(255, 107, 157, 0.3);
+}
+
+.glow-btn:hover::before {
+  opacity: 1;
+}
+
+.glow-btn:active {
+  transform: translateY(-1px) scale(1.02);
+}
+
+/* Floating hearts */
+.floating-hearts {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 100;
+  overflow: hidden;
+}
+
+.float-heart {
+  position: absolute;
+  font-size: 1.5rem;
+  opacity: 0;
+  animation: floatUp var(--duration) ease-in forwards;
+  animation-delay: var(--delay);
+  filter: drop-shadow(0 0 6px rgba(255, 107, 157, 0.4));
+}
+
+/* Audio toggle */
+.audio-toggle {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 1000;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.audio-toggle:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 20px rgba(255, 107, 157, 0.3);
+}
+
+/* ════════════════════════════════════════════════════════════════
+   ANIMATIONS
+   ════════════════════════════════════════════════════════════════ */
+@keyframes heartPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+}
+
+@keyframes heartBeat {
+  0% { transform: scale(1); }
+  14% { transform: scale(1.2); }
+  28% { transform: scale(1); }
+  42% { transform: scale(1.15); }
+  60% { transform: scale(1); }
+}
+
+@keyframes shimmer {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(25px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes revealLine {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes gentleFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes gentleSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes floatUp {
+  0% {
+    opacity: 0;
+    transform: translateY(0) rotate(0deg) scale(0.5);
+  }
+  10% {
+    opacity: 0.8;
+  }
+  90% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-100vh) rotate(var(--rotate)) scale(1);
+  }
+}
+
+@keyframes starTwinkle {
+  0%, 100% { opacity: 0.2; }
+  50% { opacity: 1; }
+}
+
+/* ════════════════════════════════════════════════════════════════
+   RESPONSIVE
+   ════════════════════════════════════════════════════════════════ */
+@media (max-width: 600px) {
+  .envelope {
+    width: 220px;
+    height: 160px;
+  }
+  .envelope-body {
+    height: 120px;
+  }
+  .reason-card {
+    padding: 2rem 1.5rem;
+  }
+  .message-overlay {
+    padding: 1.5rem;
+  }
+}
