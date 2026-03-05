@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>For You ❤️</title>
+  <meta name="description" content="A special message, just for you." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Outfit:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;1,400;1,700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- SCENE 1: Envelope Opening -->
+  <section id="scene-envelope" class="scene active">
+    <div class="stars-bg" id="stars-bg-1"></div>
+    <div class="envelope-container">
+      <div class="envelope" id="envelope">
+        <div class="envelope-flap"></div>
+        <div class="envelope-body">
+          <div class="envelope-heart">💌</div>
+        </div>
+      </div>
+      <p class="tap-hint">Click to open</p>
+    </div>
+  </section>
+
+  <!-- SCENE 2: Heart Canvas + Message -->
+  <section id="scene-heart" class="scene">
+    <canvas id="heartCanvas"></canvas>
+    <div class="message-overlay" id="messageOverlay">
+      <h1 class="love-title" id="loveTitle"></h1>
+      <div class="love-poem" id="lovePoem"></div>
+      <button id="nextBtn" class="glow-btn">Continue ❤️</button>
+    </div>
+  </section>
+
+  <!-- SCENE 3: Interactive Galaxy of Reasons -->
+  <section id="scene-reasons" class="scene">
+    <canvas id="galaxyCanvas"></canvas>
+    <div class="reasons-overlay" id="reasonsOverlay">
+      <h2 class="reasons-title">Reasons I Love You</h2>
+      <div class="reasons-carousel" id="reasonsCarousel"></div>
+      <div class="carousel-dots" id="carouselDots"></div>
+      <button id="finalBtn" class="glow-btn">One Last Thing ✨</button>
+    </div>
+  </section>
+
+  <!-- SCENE 4: Finale -->
+  <section id="scene-finale" class="scene">
+    <canvas id="fireworksCanvas"></canvas>
+    <div class="finale-overlay" id="finaleOverlay">
+      <div class="finale-heart-container" id="finaleHeartContainer">
+        <div class="beating-heart">❤️</div>
+      </div>
+      <h1 class="finale-text" id="finaleText"></h1>
+      <p class="finale-sub" id="finaleSub"></p>
+      <div class="infinity-symbol">∞</div>
+    </div>
+  </section>
+
+  <!-- Floating hearts layer -->
+  <div class="floating-hearts" id="floatingHearts"></div>
+
+  <!-- Audio toggle -->
+  <button id="audioToggle" class="audio-toggle" title="Toggle ambient sound">
+    <span id="audioIcon">🔇</span>
+  </button>
+
+  <script src="app.js"></script>
+</body>
+</html>
